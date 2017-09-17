@@ -3,6 +3,7 @@ import string
 import numpy as np
 
 from keras.models import Sequential
+from keras.layers import Activation
 from keras.layers import Dense
 from keras.layers import LSTM
 import keras
@@ -35,12 +36,11 @@ def build_part1_RNN(window_size):
     return model
 
 
-punctuation = ['!', ',', '.', ':', ';', '?']
-alphabet = list(string.ascii_lowercase)
-allowed_chars = set(punctuation + alphabet + [' '])
-
-
 def cleaned_text(text):
+    punctuation = ['!', ',', '.', ':', ';', '?']
+    alphabet = list(string.ascii_lowercase)
+    allowed_chars = set(punctuation + alphabet + [' '])
+
     all_chars = set(text)
     chars_to_remove = all_chars - allowed_chars
 
@@ -66,7 +66,7 @@ def window_transform_text(text, window_size, step_size):
 
 def build_part2_RNN(window_size, num_chars):
     model = Sequential()
-    model.add(LSTM(200, input_shape=(window_size, len(allowed_chars))))
-    model.add(Dense(len(allowed_chars)))
-    model.add(Dense(len(allowed_chars), activation='softmax'))
+    model.add(LSTM(200, input_shape=(window_size, num_chars)))
+    model.add(Dense(num_chars))
+    model.add(Activation('softmax'))
     return model
